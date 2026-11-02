@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:musicplayer/dark_mode.dart';
-import 'package:musicplayer/light_mode.dart';
+import 'package:musicplayer/theme/dark_mode.dart';
+import 'package:musicplayer/theme/light_mode.dart';
 
 class ThemeProvider extends ChangeNotifier {
   // تیم در اول باید چه باشد در اینجا مشخص میشود

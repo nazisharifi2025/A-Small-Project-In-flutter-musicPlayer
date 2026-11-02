@@ -21,8 +21,12 @@ class _SongPageState extends State<SongPage> {
             Expanded(
               flex: 4,
 
-              child: CustomShadow(child: Image.asset(SongList[1].imageUrl)),
+              child: ClipRRect(
+                borderRadius: BorderRadiusGeometry.circular(12),
+                child: CustomShadow(child: Image.asset(SongList[1].imageUrl)),
+              ),
             ),
+            SizedBox(width: 8),
             Column(
               children: [
                 Slider(value: 50, min: 0, max: 60, onChanged: (Value) {}),
@@ -41,6 +45,7 @@ class _SongPageState extends State<SongPage> {
                           ),
                         ),
                       ),
+                      SizedBox(width: 8),
                       Expanded(
                         flex: 3,
                         child: CustomShadow(
@@ -80,19 +85,19 @@ class CustomShadow extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: radius,
-
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.30 : 0.30),
+            color: Colors.grey.shade500,
             blurRadius: 1,
-            offset: Offset(1, 1),
+            offset: Offset(4, 4),
           ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.20 : 0.20),
-            blurRadius: 1,
-            offset: Offset(-1, -1),
-          ),
+          // BoxShadow(
+          //   color: Colors.grey.shade500,
+          //   blurRadius: 1,
+          //   offset: Offset(-4, -4),
+          // ),
         ],
       ),
       child: child,

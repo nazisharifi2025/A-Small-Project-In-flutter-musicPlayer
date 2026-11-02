@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:musicplayer/light_mode.dart';
+import 'package:musicplayer/playlist-provider.dart';
+import 'package:musicplayer/theme/light_mode.dart';
 import 'package:musicplayer/pages/home_page.dart';
 import 'package:musicplayer/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
-      child: MyApp(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(create: (context) => PlaylistProvider()),
+      ],
     ),
   );
 }
