@@ -22,6 +22,12 @@ class PlaylistProvider extends ChangeNotifier {
   bool get isPlaying => _isPlaying;
 
   AudioPlayer get audioPlayer => _audioPlayer;
+
+  //
+  Stream<Duration> get durationStream => _audioPlayer.onDurationChanged;
+
+  Stream<Duration> get positionStream => _audioPlayer.onDurationChanged;
+
   // Constractor: listen to audio player state
   PlaylistProvider() {
     _audioPlayer.onPlayerStateChanged.listen((state) {
@@ -45,7 +51,27 @@ class PlaylistProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+  //
+  // Future<void> playSong(int songId) async {
+  //   final index = _PlayList.indexWhere(
+  //     (song) => song.id == songId,
+  //   );
 
+  //   if (index == -1) return;
+
+  //   _currentSongIndex = index;
+
+  //   final song = _PlayList[index];
+
+  //   await _audioPlayer.stop();
+
+  //   await _audioPlayer.play(
+  //     AssetSource(song.audioUrl),
+  //   );
+
+  //   notifyListeners();
+  // }
+  //
   // pause song
   Future<void> pauseSong() async {
     await _audioPlayer.pause();
@@ -70,5 +96,50 @@ class PlaylistProvider extends ChangeNotifier {
   // Play next song
   Future<void> PlayNextSong() async {
     if (_PlayList.isEmpty) return;
+
+    if (_currentSongIndex == null) {
+      await playSong(0);
+      return;
+    }
+
+    int nextIndex = _currentSongIndex! + 1;
+
+    if (nextIndex >= _PlayList.length) {
+      nextIndex = 0;
+    }
+    await playSong(nextIndex);
+  }
+
+  // play previus song
+  Future<void> playPreviusSong() async {
+    if (_PlayList.isEmpty) return;
+
+    if (_currentSongIndex == null) {
+      await playSong(0);
+      return;
+    }
+
+    int previousIndex = _currentSongIndex! - 1;
+
+    if (previousIndex < 0) {
+      previousIndex = _PlayList.length - 1;
+    }
+
+    await playSong(previousIndex);
+  }
+
+  // stop song
+  Future<void> stopSong() async {
+    await _audioPlayer.stop();
+    _currentSongIndex = null;
+    _isPlaying = false;
+    notifyListeners();
+  }
+
+  // Dispose audio player
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
   }
 }

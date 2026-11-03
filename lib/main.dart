@@ -12,6 +12,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => PlaylistProvider()),
       ],
+      child: MyApp(),
     ),
   );
 }
