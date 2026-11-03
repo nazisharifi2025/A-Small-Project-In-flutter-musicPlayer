@@ -127,28 +127,25 @@ class CustomShadow extends StatelessWidget {
   Widget build(BuildContext context) {
     final radius = BorderRadius.circular(12);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Padding(
-      padding: const EdgeInsets.all(12),
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: radius,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.shade500,
-              blurRadius: 1,
-              offset: Offset(4, 4),
-            ),
-            // BoxShadow(
-            //   color: Colors.grey.shade500,
-            //   blurRadius: 1,
-            //   offset: Offset(-4, -4),
-            // ),
-          ],
-        ),
-        child: child,
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: radius,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade500,
+            blurRadius: 1,
+            offset: Offset(4, 4),
+          ),
+          // BoxShadow(
+          //   color: Colors.grey.shade500,
+          //   blurRadius: 1,
+          //   offset: Offset(-4, -4),
+          // ),
+        ],
       ),
+      child: child,
     );
   }
 }
