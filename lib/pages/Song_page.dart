@@ -1,13 +1,12 @@
-// import 'dart:nativewrappers/_internal/vm/lib/ffi_native_type_patch.dart';
-
 import 'package:flutter/material.dart';
 import 'package:musicplayer/playlist-provider.dart';
-// import 'package:musicplayer/repositories/Song_repositorie.dart';
 import 'package:provider/provider.dart';
 
 class SongPage extends StatefulWidget {
   final int song_Id;
-  SongPage({super.key, required this.song_Id});
+
+  const SongPage({super.key, required this.song_Id});
+
   @override
   State<SongPage> createState() => _SongPageState();
 }
@@ -17,7 +16,6 @@ class _SongPageState extends State<SongPage> {
   void initState() {
     super.initState();
 
-    // Start playing the selected song after the page loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final provider = Provider.of<PlaylistProvider>(context, listen: false);
 
@@ -25,6 +23,7 @@ class _SongPageState extends State<SongPage> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return Consumer<PlaylistProvider>(
       builder: (context, Provider, child) {
@@ -34,118 +33,144 @@ class _SongPageState extends State<SongPage> {
             ? Provider.playList[currentIndex]
             : Provider.playList[widget.song_Id];
 
-        return Scaffold(
-          appBar: AppBar(title: Text("Song Page")),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Column(
-              children: [
-                Expanded(
-                  flex: 4,
+        final isDark = Theme.of(context).brightness == Brightness.dark;
 
-                  child: ClipRRect(
-                    borderRadius: BorderRadiusGeometry.circular(12),
-                    child: CustomShadow(
-                      child: Image.asset(
-                        currentSong.imageUrl,
-                        fit: BoxFit.cover,
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text("Now Playing"),
+            centerTitle: true,
+            elevation: 0,
+          ),
+
+          body: Container(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+
+              child: Column(
+                children: [
+                  // Album Cover
+                  Expanded(
+                    flex: 14,
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        gradient: LinearGradient(
+                          colors: isDark
+                              ? [Colors.grey.shade900, Colors.black]
+                              : [Colors.blue.shade100, Colors.blue.shade300],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.2),
+                            blurRadius: 5,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
+                      ),
+
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.asset(
+                          currentSong.imageUrl,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: 12),
-                Text(
-                  currentSong.title,
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Column(
-                  children: [
-                    Slider(value: 50, min: 0, max: 60, onChanged: (Value) {}),
-                    Row(
-                      spacing: 8,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: CustomShadow(
-                            child: IconButton(
-                              onPressed: () {
-                                Provider.playPreviusSong();
-                              },
-                              icon: Icon(Icons.skip_previous_rounded),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        Expanded(
-                          flex: 3,
-                          child: CustomShadow(
-                            child: IconButton(
-                              onPressed: () {
-                                Provider.togglePlayPause();
-                              },
-                              icon: Icon(
-                                Provider.isPlaying
-                                    ? Icons.pause
-                                    : Icons.play_arrow,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: CustomShadow(
-                            child: IconButton(
-                              onPressed: () {
-                                Provider.PlayNextSong();
-                              },
-                              icon: Icon(Icons.skip_next),
-                            ),
-                          ),
-                        ),
-                      ],
+
+                  const SizedBox(height: 22),
+
+                  // Song Information
+                  Text(
+                    currentSong.title,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 23,
+                      fontWeight: FontWeight.bold,
                     ),
-                  ],
-                ),
-              ],
+                  ),
+
+                  const SizedBox(height: 7),
+
+                  Text(
+                    currentSong.singerName,
+                    style: TextStyle(fontSize: 16, color: Colors.grey.shade500),
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  // Progress Slider
+                  Slider(
+                    value: 50,
+                    min: 0,
+                    max: 60,
+                    activeColor: Colors.blueAccent,
+                    onChanged: (value) {},
+                  ),
+
+                  const Spacer(),
+
+                  // Music Controls
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          Provider.playPreviusSong();
+                        },
+                        icon: const Icon(Icons.skip_previous_rounded, size: 35),
+                      ),
+
+                      const SizedBox(width: 25),
+
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.blueAccent,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.blueAccent.withValues(alpha: 0.35),
+                              blurRadius: 12,
+                              spreadRadius: 2,
+                            ),
+                          ],
+                        ),
+                        child: IconButton(
+                          onPressed: () {
+                            Provider.togglePlayPause();
+                          },
+                          icon: Icon(
+                            Provider.isPlaying ? Icons.pause : Icons.play_arrow,
+                            color: Colors.white,
+                            size: 38,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(width: 25),
+
+                      IconButton(
+                        onPressed: () {
+                          Provider.PlayNextSong();
+                        },
+                        icon: const Icon(Icons.skip_next_rounded, size: 35),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 20),
+                ],
+              ),
             ),
           ),
         );
       },
-    );
-  }
-}
-
-class CustomShadow extends StatelessWidget {
-  final Widget child;
-  CustomShadow({super.key, required this.child});
-  @override
-  Widget build(BuildContext context) {
-    final radius = BorderRadius.circular(12);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: radius,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.shade500,
-            blurRadius: 1,
-            offset: Offset(4, 4),
-          ),
-          // BoxShadow(
-          //   color: Colors.grey.shade500,
-          //   blurRadius: 1,
-          //   offset: Offset(-4, -4),
-          // ),
-        ],
-      ),
-      child: child,
     );
   }
 }
